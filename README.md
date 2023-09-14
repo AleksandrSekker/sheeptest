@@ -18,4 +18,4 @@ $ pnpm run dev
 ```
 ## Link to deployed web app
 
-### https://sheeptest.up.railway.app/
+### https://AleksandrSekker.github.io/sheeptest/
