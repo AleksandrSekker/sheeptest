@@ -36,7 +36,6 @@ jobs:
             git pull origin gh-pages
           else
             git checkout -b gh-pages
-            git push origin gh-pages
           fi
 
       - name: Deploy
