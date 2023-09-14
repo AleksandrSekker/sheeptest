@@ -43,7 +43,7 @@ jobs:
           mv dist/* ./
           git add .
           git commit -m "Deploy to GitHub Pages"
-          git remote add origin_with_token https://$key@github.com/AleksandrSekker/sheeptest.git
-          git push origin_with_token gh-pages
+          git remote set-url origin https://$key@github.com/AleksandrSekker/sheeptest.git
+          git push origin gh-pages -f
         env:
           GH_TOKEN: ${{ secrets.key }}
