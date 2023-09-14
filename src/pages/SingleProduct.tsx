@@ -1,14 +1,13 @@
-import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/Store';
 import {
   deleteOneProduct,
   fetchOneProduct,
-  fetchProducts,
+  setProducts,
 } from '../store/productSlice';
 import { DangerButton, SecondaryButton } from '../components/Button/Buttons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
@@ -19,6 +18,7 @@ const SingleProduct = () => {
     loading,
     error,
     singleProduct: product,
+    data,
   } = useSelector((state: RootState) => state.products);
 
   useEffect(() => {
@@ -32,11 +32,24 @@ const SingleProduct = () => {
   if (error) {
     return <p>Error: {error}</p>;
   }
-  console.log(product);
-  console.log(id);
-  console.log(loading);
-  console.log(error);
 
+  const deleteOneProductHandler = () => {
+    dispatch(deleteOneProduct(Number(id))).then(() => {
+      navigate('/');
+      console.log('data', data.products);
+      console.log('id', id);
+      console.log(
+        'filtered data',
+        data.products.filter((product) => product.id !== Number(id)),
+      );
+      dispatch(
+        setProducts(
+          data.products.filter((product) => product.id !== Number(id)),
+        ),
+      );
+    });
+  };
+  console.log('data', data.products);
   return (
     <div className="container mx-auto p-4">
       <div className="max-w-screen-lg mx-auto bg-white rounded-lg shadow-lg p-6">
@@ -65,14 +78,7 @@ const SingleProduct = () => {
               >
                 Update
               </SecondaryButton>
-              <DangerButton
-                onClick={() => {
-                  dispatch(deleteOneProduct(Number(id))).then(() => {
-                    navigate('/');
-                    dispatch(fetchProducts());
-                  });
-                }}
-              >
+              <DangerButton onClick={deleteOneProductHandler}>
                 Delete
               </DangerButton>
             </div>

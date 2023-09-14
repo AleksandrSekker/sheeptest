@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from '../store/Store';
-import { ChangeEvent, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, ChangeEvent } from 'react';
 import {
   fetchProducts,
   setLimitValue,
@@ -26,7 +26,7 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(fetchProducts());
-  }, [dispatch, searchValue, data.skip, data.limit]);
+  }, [searchValue, data.skip, data.limit, dispatch]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -50,6 +50,7 @@ const Home = () => {
           dispatch(setSearchValue(e.target.value))
         }
       />
+
       <SearchInput
         title={`Limit`}
         placeholder={`Change limit`}

@@ -5,6 +5,7 @@ import { createProduct } from '../../store/productFormSlice';
 import { useDispatch } from 'react-redux';
 import { PrimaryButton } from '../Button/Buttons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { AppDispatch } from '../../store/Store';
 
 type initialValues = {
   title: string;
@@ -16,14 +17,14 @@ type initialValues = {
   brand: string;
   category: string;
   thumbnail: string;
-  images: string[];
+  images: (string | undefined)[];
 };
 interface IProductForm {
   initialValues: initialValues;
   schema: Yup.ObjectSchema<initialValues, Yup.AnyObject, object, ''>;
 }
 const ProductForm = ({ schema, initialValues }: IProductForm) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const formik = useFormik({
     initialValues,
     validationSchema: schema,

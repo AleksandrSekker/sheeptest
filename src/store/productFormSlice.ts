@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { baseURL } from '../constants/general';
-import { ProductFormState } from './Interfaces';
+import { ProductForm, ProductFormState } from './Interfaces';
 
 const initialState: ProductFormState = {
   product: {
@@ -22,7 +22,7 @@ const initialState: ProductFormState = {
 // Define an async thunk to create a product
 const createProduct = createAsyncThunk(
   'products/create',
-  async (productData, thunkAPI) => {
+  async (productData: ProductForm, thunkAPI) => {
     try {
       const response = await fetch(`${baseURL}/products/add`, {
         method: 'POST',
@@ -46,10 +46,9 @@ const productFormSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(createProduct.fulfilled, (state, action) => {
+      .addCase(createProduct.fulfilled, (state) => {
         state.loading = false;
         state.product = initialState.product;
-        console.log('response action.payload', action.payload);
       })
       .addCase(createProduct.rejected, (state, action) => {
         state.loading = false;

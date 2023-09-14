@@ -33,7 +33,7 @@ const deleteOneProduct = createAsyncThunk(
     if (!response.ok) {
       throw new Error('Failed to delete product');
     }
-    return id; // Return the deleted product's ID on success
+    return id;
   },
 );
 const productSlice = createSlice({
@@ -69,6 +69,7 @@ const productSlice = createSlice({
     },
     setProducts: (state, action) => {
       state.data.products = action.payload;
+      state.data.total -= 1;
     },
   },
   extraReducers: (builder) => {
@@ -101,6 +102,8 @@ const productSlice = createSlice({
       })
       .addCase(deleteOneProduct.fulfilled, (state, action) => {
         state.loading = false;
+        console.log('state.data', state.data);
+        console.log('action.payload', action.payload);
         state.data.products = state.data.products.filter(
           (product) => product.id !== action.payload,
         );
