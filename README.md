@@ -16,6 +16,3 @@ Run the project:
 ```
 $ pnpm run dev 
 ```
-## Link to deployed web app
-
-### https://AleksandrSekker.github.io/sheeptest/

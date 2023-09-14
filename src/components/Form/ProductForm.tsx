@@ -6,8 +6,10 @@ import { useDispatch } from 'react-redux';
 import { PrimaryButton } from '../Button/Buttons';
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 import { AppDispatch } from '../../store/Store';
+import { updateOneProduct } from '../../store/productSlice';
 
 type initialValues = {
+  id: number;
   title: string;
   description: string;
   price: number;
@@ -21,15 +23,18 @@ type initialValues = {
 };
 interface IProductForm {
   initialValues: initialValues;
+  type: 'create' | 'update';
   schema: Yup.ObjectSchema<initialValues, Yup.AnyObject, object, ''>;
 }
-const ProductForm = ({ schema, initialValues }: IProductForm) => {
+const ProductForm = ({ schema, initialValues, type }: IProductForm) => {
   const dispatch = useDispatch<AppDispatch>();
   const formik = useFormik({
     initialValues,
     validationSchema: schema,
     onSubmit: (values) => {
-      dispatch(createProduct(values));
+      type === 'create'
+        ? dispatch(createProduct(values))
+        : dispatch(updateOneProduct(values));
     },
   });
 

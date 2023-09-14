@@ -78,7 +78,11 @@ const Home = () => {
         {formLoading ? (
           <p>Loading...</p>
         ) : (
-          <ProductForm initialValues={product} schema={ProductSchema} />
+          <ProductForm
+            initialValues={product}
+            schema={ProductSchema}
+            type="create"
+          />
         )}
         {formError ? formError : null}
       </div>

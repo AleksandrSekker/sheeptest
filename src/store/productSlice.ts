@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { dataProduct, Product } from './Interfaces';
+import { dataProduct, Product, ProductForm } from './Interfaces';
 import { fullURL } from './utility';
 import { baseURL } from '../constants/general';
 
@@ -34,6 +34,24 @@ const deleteOneProduct = createAsyncThunk(
       throw new Error('Failed to delete product');
     }
     return id;
+  },
+);
+const updateOneProduct = createAsyncThunk(
+  'products/updateOneProduct',
+  async (product: ProductForm, thunkAPI) => {
+    try {
+      const response = await fetch(`${baseURL}/products/${product.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(product),
+      });
+      console.log('response update', response);
+      console.log('url', `${baseURL}/products/${String(product.id)}`);
+      console.log('data', JSON.stringify(product));
+      return response.json();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
   },
 );
 const productSlice = createSlice({
@@ -100,15 +118,21 @@ const productSlice = createSlice({
       .addCase(deleteOneProduct.pending, (state) => {
         state.loading = true;
       })
-      .addCase(deleteOneProduct.fulfilled, (state, action) => {
+      .addCase(deleteOneProduct.fulfilled, (state) => {
         state.loading = false;
-        console.log('state.data', state.data);
-        console.log('action.payload', action.payload);
-        state.data.products = state.data.products.filter(
-          (product) => product.id !== action.payload,
-        );
       })
       .addCase(deleteOneProduct.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      })
+      .addCase(updateOneProduct.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateOneProduct.fulfilled, (state, action) => {
+        state.loading = false;
+        state.singleProduct = action.payload;
+      })
+      .addCase(updateOneProduct.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
       });
@@ -123,4 +147,4 @@ export const {
   setCurrentPage,
   setProducts,
 } = productSlice.actions;
-export { fetchProducts, fetchOneProduct, deleteOneProduct };
+export { fetchProducts, fetchOneProduct, deleteOneProduct, updateOneProduct };

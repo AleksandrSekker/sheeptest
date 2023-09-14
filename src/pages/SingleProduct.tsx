@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/Store';
 import {
@@ -8,9 +8,13 @@ import {
 } from '../store/productSlice';
 import { DangerButton, SecondaryButton } from '../components/Button/Buttons';
 import { useNavigate, useParams } from 'react-router-dom';
+import Modal from '../components/Modal/Modal';
+import ProductForm from '../components/Form/ProductForm';
+import { ProductSchema } from '../Schema/Schema';
 
 const SingleProduct = () => {
   const { id } = useParams<{ id: string }>();
+  const [isOpen, setIsOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -73,9 +77,7 @@ const SingleProduct = () => {
             <p className="text-gray-600">Rating: {product.rating}</p>
             <p className="text-gray-600">Stock: {product.stock}</p>
             <div className="flex justify-around mt-4">
-              <SecondaryButton
-                onClick={() => dispatch(deleteOneProduct(Number(id)))}
-              >
+              <SecondaryButton onClick={() => setIsOpen(true)}>
                 Update
               </SecondaryButton>
               <DangerButton onClick={deleteOneProductHandler}>
@@ -99,6 +101,17 @@ const SingleProduct = () => {
             : null}
         </div>
       </div>
+      <Modal
+        title="Update this product"
+        isOpen={isOpen}
+        closeModal={() => setIsOpen(false)}
+      >
+        <ProductForm
+          initialValues={product}
+          schema={ProductSchema}
+          type={'update'}
+        />
+      </Modal>
     </div>
   );
 };
